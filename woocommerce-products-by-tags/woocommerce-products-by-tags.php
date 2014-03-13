@@ -33,7 +33,7 @@ function woo_products_by_tags_shortcode( $atts, $content = null ) {
 	$args = array( 
 				'post_type' 	 => 'product', 
 				'posts_per_page' => 5, 
-				'product_tag' 	 => $tags 
+				'product_tag' 	 => $tags
 				);
 	
 	// Create the new query
@@ -45,46 +45,37 @@ function woo_products_by_tags_shortcode( $atts, $content = null ) {
 	// If results
 	if( $product_count > 0 ) :
 	
-		echo '<ul class="products">';
+		echo '<ul class="products ribbon">';
 		
 			// Start the loop
 			while ( $loop->have_posts() ) : $loop->the_post(); global $product;
 				global $post;
-			
-			
-				/*
-				
-				echo "<p>" . $thePostID = $post->post_title. " </p>";
-				
-				if (has_post_thumbnail( $loop->post->ID )) 
-					echo  get_the_post_thumbnail($loop->post->ID, 'shop_catalog'); 
-				else 
-					echo '<img src="'.$woocommerce->plugin_url().'/assets/images/placeholder.png" alt="" width="'.$woocommerce->get_image_size('shop_catalog_image_width').'px" height="'.$woocommerce->get_image_size('shop_catalog_image_height').'px" />';
-		
-				*/
-				
+				++$i;
+				if ($i == 5) $last = "last";
+				$ID = $post->ID;	
 				$title = $post->post_title;
 				$price = $product->get_price_html();
-				$image = get_the_post_thumbnail($loop->post->ID, 'shop_catalog');
-				$ID = $post->ID;
+				$image = wp_get_attachment_image_src( get_post_thumbnail_id( $ID ), 'single-post-thumbnail' );
+				$image = $image[0];
 				$link = get_permalink($ID);
 				
 				echo "
-				<li class='post-609 product type-product status-publish hentry product first featured instock'>
+				<li class='post-$ID product type-product status-publish hentry product featured instock $last'>
 				
 							
 					<a href='$link' title='$title'>
 						
-				        <div class='thumbnail'>$image
-				        				        <div class='thumb-shadow'></div>
+				        <div class='thumbnail'>
+				        	<img src='$image' class='attachment-post-thumbnail wp-post-image' alt='$title' />			        
+				         <div class='thumb-shadow'></div>
 				    			
-				    		<strong class='below-thumb'> 
-				    		$title
-				    		</strong>    	
+			    		<strong class='below-thumb'> 
+			    		$title
+			    		</strong>    	
 				    </div>
 				
 						
-					<span class='price'><span class='from'>From: </span><span class='amount'>$price</span></span>
+					<span class='price'><span class='from'></span><span class='amount'>$price</span></span>
 					
 					</a>
 					
