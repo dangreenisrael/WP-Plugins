@@ -3,7 +3,7 @@
 Plugin Name: WooCommerce Tranzila Gateway
 Plugin URI: http://woothemes.com/woocommerce
 Description: Extends WooCommerce with an Tranzila gateway.
-Version: 1.0.2
+Version: 1.0.1
 Author: Dan Green
 Author URI: http://tlvwebdevelopment.com
 License: GNU General Public License v3.0
@@ -111,21 +111,10 @@ function woocommerce_gateway_tranzila_init() {
 	 		$order = new WC_Order( $order_id );
 	 		$_SESSION['tranzila_token'] = mt_rand();
 	 		$_SESSION['encryption-key'] = mt_rand();
-	 		// Get the product list
-	 		global $woocommerce; 	
-	 		$items = $woocommerce->cart->get_cart();
-	 		$i = 0;
-	 		$len = count($items);	 	
-	 		foreach($items as $item => $values) { 
-	 			$_product = $values['data']->post;
-	 			$description .= $values['quantity']. " x ". $_product->post_title;
-	 			if ($i != $len - 1) $description .= ", ";
-	 			$i++;
-	 		}
-	 
+	 		
 			$tranzila_data = array(
 				'sum' => $order -> get_order_total(),
-				'pdesc' => $description,
+				'pdesc' => $productinfo,
 				'contact' => $order -> billing_first_name." ".$order -> billing_last_name,
 				'company' => "Personal",
 				'email' => $order -> billing_email,
@@ -192,6 +181,7 @@ function header_func(){
 		$tranzila_info['TranzilaToken'] = encrypt($tranzila_info['TranzilaToken']);
 		$tranzila_info = json_encode($tranzila_info);
 		?>
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
 		<script type="text/javascript">(function(d){d.fn.redirect=function(a,b,c){void 0!==c?(c=c.toUpperCase(),"GET"!=c&&(c="POST")):c="POST";if(void 0===b||!1==b)b=d().parse_url(a),a=b.url,b=b.params;var e=d("<form></form");e.attr("method",c);e.attr("action",a);for(var f in b)a=d("<input />"),a.attr("type","hidden"),a.attr("name",f),a.attr("value",b[f]),a.appendTo(e);d("body").append(e);e.submit()};d.fn.parse_url=function(a){if(-1==a.indexOf("?"))return{url:a,params:{}};var b=a.split("?"),a=b[0],c={},b=b[1].split("&"),e={},d;for(d in b){var g= b[d].split("=");e[g[0]]=g[1]}c.url=a;c.params=e;return c}})(jQuery);</script>
 		
 			<script type='text/javascript'>
